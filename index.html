@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Kamus Istilah Pemrograman & Cheat Sheet PWA</title>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#070b14">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-code: 'JetBrains Mono', monospace;
+      --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* THEME DARK (Default Luxury Black & Blue) */
+    html[data-theme="dark"] {
+      --bg-base: #060911;
+      --bg-surface: #0c1220;
+      --bg-card: rgba(15, 23, 42, 0.7);
+      --border-color: rgba(56, 189, 248, 0.15);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.25);
+      --code-bg: #030712;
+      --tag-bg: rgba(56, 189, 248, 0.12);
+      --shimmer-grad: linear-gradient(90deg, #1d4ed8 0%, #38bdf8 50%, #93c5fd 75%, #1d4ed8 100%);
+    }
+
+    /* THEME LIGHT (Clean Modern Tech) */
+    html[data-theme="light"] {
+      --bg-base: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-card: #ffffff;
+      --border-color: rgba(37, 99, 235, 0.15);
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --accent-blue: #0284c7;
+      --accent-glow: rgba(2, 132, 199, 0.15);
+      --code-bg: #0f172a;
+      --tag-bg: rgba(2, 132, 199, 0.1);
+      --shimmer-grad: linear-gradient(90deg, #0369a1 0%, #0284c7 50%, #38bdf8 75%, #0369a1 100%);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* ================= FLASHSCREEN XTRADE ================= */
+    #splashscreen {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, #0f1b33 0%, #050811 80%);
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.7s cubic-bezier(0.65, 0, 0.35, 1), transform 0.7s ease;
+    }
+
+    #splashscreen.fade-out {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(1.05);
+    }
+
+    .shimmer-logo {
+      font-size: 3.4rem;
+      font-weight: 900;
+      letter-spacing: 7px;
+      background: linear-gradient(110deg, #1e3a8a 0%, #60a5fa 35%, #ffffff 50%, #38bdf8 65%, #1e3a8a 100%);
+      background-size: 250% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmerAnimation 2.2s infinite linear;
+      text-shadow: 0 0 35px rgba(56, 189, 248, 0.4);
+    }
+
+    .splash-subtitle {
+      color: #94a3b8;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 4px;
+      margin-top: 8px;
+      text-transform: uppercase;
+    }
+
+    .luxury-line {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+      margin-top: 18px;
+      border-radius: 99px;
+      box-shadow: 0 0 10px #38bdf8;
+    }
+
+    @keyframes shimmerAnimation {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ================= HEADER & NAV ================= */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg-surface);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 16px;
+    }
+
+    .nav-container {
+      max-width: 768px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-title span {
+      background: var(--shimmer-grad);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 900;
+    }
+
+    .theme-toggle-btn {
+      background: var(--tag-bg);
+      border: 1px solid var(--border-color);
+      color: var(--accent-blue);
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .theme-toggle-btn:hover {
+      box-shadow: 0 0 14px var(--accent-glow);
+    }
+
+    /* ================= MAIN CONTAINER ================= */
+    main {
+      flex: 1;
+      max-width: 768px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* Search Box */
+    .search-wrapper {
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 14px 16px 14px 44px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: var(--transition-smooth);
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    /* Category Filter Chips */
+    .categories {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+      scrollbar-width: none;
+    }
+    .categories::-webkit-scrollbar { display: none; }
+
+    .chip {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 7px 15px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .chip.active {
+      background: var(--accent-blue);
+      color: #ffffff;
+      border-color: var(--accent-blue);
+      box-shadow: 0 3px 12px var(--accent-glow);
+    }
+
+    /* Snippet Cards */
+    .cards-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .snippet-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+
+    .snippet-card:hover {
+      border-color: var(--accent-blue);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .card-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-htmlcss { background: rgba(249, 115, 22, 0.15); color: #f97316; }
+    .badge-javascript { background: rgba(234, 179, 8, 0.15); color: #eab308; }
+    .badge-python { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .badge-sql { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+    .badge-git { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+
+    .card-desc {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin-bottom: 12px;
+    }
+
+    /* Code Container & Copy Button */
+    .code-container {
+      position: relative;
+      background: var(--code-bg);
+      border-radius: 12px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .code-content {
+      font-family: var(--font-code);
+      font-size: 0.82rem;
+      color: #38bdf8;
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.5;
+      padding-right: 65px;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      padding: 5px 10px;
+      border-radius: 7px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: var(--transition-smooth);
+    }
+
+    .copy-btn:active {
+      transform: scale(0.94);
+    }
+
+    .copy-btn.copied {
+      background: #10b981;
+      border-color: #10b981;
+    }
+
+    .usage-example {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border-color);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .usage-label {
+      font-weight: 700;
+      color: var(--accent-blue);
+      margin-right: 4px;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 40px 10px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    /* Offline Toast */
+    .offline-banner {
+      display: none;
+      background: #0284c7;
+      color: #fff;
+      text-align: center;
+      font-size: 0.78rem;
+      padding: 5px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FLASHSCREEN XTRADE -->
+  <div id="splashscreen">
+    <h1 class="shimmer-logo">XTRADE</h1>
+    <div class="luxury-line"></div>
+    <p class="splash-subtitle">Developer Companion</p>
+  </div>
+
+  <!-- OFFLINE STATUS BANNER -->
+  <div id="offlineBanner" class="offline-banner">Mode Offline Aktif - Menjalankan Saku Lokal</div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="nav-container">
+      <div class="brand-title">
+        <span>XTRADE</span> DevSheet
+      </div>
+      <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Mode">
+        <svg id="themeIcon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="5"></circle>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN APP -->
+  <main>
+    <!-- Pencarian Cepat -->
+    <div class="search-wrapper">
+      <svg class="search-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" id="searchInput" class="search-input" placeholder="Cari sintaks, keyword, fungsi..." autocomplete="off">
+    </div>
+
+    <!-- Kategori Filter -->
+    <div class="categories" id="categoryContainer">
+      <button class="chip active" data-cat="all">Semua</button>
+      <button class="chip" data-cat="HTML/CSS">HTML/CSS</button>
+      <button class="chip" data-cat="JavaScript">JavaScript</button>
+      <button class="chip" data-cat="Python">Python</button>
+      <button class="chip" data-cat="SQL">SQL</button>
+      <button class="chip" data-cat="Git">Git</button>
+    </div>
+
+    <!-- Cards Daftar Snippet -->
+    <div class="cards-grid" id="cardsGrid"></div>
+    <div class="empty-state" id="emptyState">Kode snippet tidak ditemukan.</div>
+  </main>
+
+  <script>
+    /* ================= 1. DATABASE KAMUS & CHEAT SHEET ================= */
+    const snippets = [
+      // HTML/CSS
+      {
+        id: 1,
+        cat: 'HTML/CSS',
+        title: 'CSS Flexbox Center',
+        desc: 'Memposisikan elemen tepat di tengah secara vertikal & horizontal.',
+        code: `display: flex;\njustify-content: center;\nalign-items: center;`,
+        usage: 'Sering dipakai untuk modal dialog, hero section, atau icon centering.'
+      },
+      {
+        id: 2,
+        cat: 'HTML/CSS',
+        title: 'CSS Grid Auto-Fit Responsive',
+        desc: 'Membuat grid responsif otomatis tanpa butuh media query.',
+        code: `display: grid;\ngrid-template-columns: repeat(auto-fit, minmax(250px, 1fr));\ngap: 1rem;`,
+        usage: 'Ideal untuk katalog produk atau kartu portofolio responsif.'
+      },
+      {
+        id: 3,
+        cat: 'HTML/CSS',
+        title: 'CSS Glassmorphism Effect',
+        desc: 'Efek kaca buram modern dengan backdrop blur.',
+        code: `background: rgba(255, 255, 255, 0.05);\nbackdrop-filter: blur(12px);\nborder: 1px solid rgba(255, 255, 255, 0.1);`,
+        usage: 'Desain UI kartu futuristik dan dashboard modern.'
+      },
+
+      // JavaScript
+      {
+        id: 4,
+        cat: 'JavaScript',
+        title: 'Async/Await Fetch Data',
+        desc: 'Pengambilan data API secara asinkron dengan penanganan error.',
+        code: `async function getData(url) {\n  try {\n    const res = await fetch(url);\n    const data = await res.json();\n    return data;\n  } catch (err) {\n    console.error(err);\n  }\n}`,
+        usage: 'Memanggil REST API dari backend / third-party.'
+      },
+      {
+        id: 5,
+        cat: 'JavaScript',
+        title: 'Array Filter & Map Chaining',
+        desc: 'Menyaring dan mengubah elemen array secara fungsional.',
+        code: `const activeUsers = users\n  .filter(u => u.isActive)\n  .map(u => u.name);`,
+        usage: 'Manipulasi data response tabel atau daftar profil.'
+      },
+      {
+        id: 6,
+        cat: 'JavaScript',
+        title: 'Deep Clone Object',
+        desc: 'Kloning objek kompleks tanpa referensi memori asli.',
+        code: `const copy = structuredClone(originalObject);`,
+        usage: 'Mencegah mutasi state yang tidak disengaja di JS modern.'
+      },
+
+      // Python
+      {
+        id: 7,
+        cat: 'Python',
+        title: 'List Comprehension',
+        desc: 'Cara ringkas dan ekspresif untuk menghasilkan list baru.',
+        code: `evens = [x for x in range(20) if x % 2 == 0]`,
+        usage: 'Filter angka genap atau manipulasi koleksi data cepat.'
+      },
+      {
+        id: 8,
+        cat: 'Python',
+        title: 'Context Manager (File I/O)',
+        desc: 'Membaca berkas secara aman dengan auto-closing resource.',
+        code: `with open('data.txt', 'r', encoding='utf-8') as f:\n    content = f.read()`,
+        usage: 'Operasi berkas tanpa takut resource leak / file terkunci.'
+      },
+      {
+        id: 9,
+        cat: 'Python',
+        title: 'Dictionary Get with Default',
+        desc: 'Mengambil nilai key tanpa melempar KeyError jika tidak ditemukan.',
+        code: `val = config.get('timeout', 30)`,
+        usage: 'Membaca konfigurasi environment yang opsional.'
+      },
+
+      // SQL
+      {
+        id: 10,
+        cat: 'SQL',
+        title: 'INNER JOIN Query',
+        desc: 'Menggabungkan baris dari dua tabel berdasarkan relasi kunci.',
+        code: `SELECT u.name, o.total \nFROM users u\nINNER JOIN orders o ON u.id = o.user_id\nWHERE o.status = 'PAID';`,
+        usage: 'Menampilkan data pesanan beserta nama pemilik order.'
+      },
+      {
+        id: 11,
+        cat: 'SQL',
+        title: 'GROUP BY with HAVING',
+        desc: 'Mengelompokkan agregat data dan memfilter hasil agregatnya.',
+        code: `SELECT department, COUNT(*) as total\nFROM employees\nGROUP BY department\nHAVING COUNT(*) > 5;`,
+        usage: 'Mencari divisi yang memiliki lebih dari 5 karyawan.'
+      },
+
+      // Git
+      {
+        id: 12,
+        cat: 'Git',
+        title: 'Git Undo Last Commit',
+        desc: 'Membatalkan commit terakhir namun perubahan kode tetap ada di staging.',
+        code: `git reset --soft HEAD~1`,
+        usage: 'Saat lupa menambahkan berkas atau ingin merapikan pesan commit.'
+      },
+      {
+        id: 13,
+        cat: 'Git',
+        title: 'Git Stash Simpan Sementara',
+        desc: 'Menyimpan pekerjaan kotor sementara tanpa harus commit terlebih dahulu.',
+        code: `git stash save "fitur-baru"\n# Ambil kembali nanti:\ngit stash pop`,
+        usage: 'Berguna saat harus berpindah branch mendadak untuk fix hotfix.'
+      }
+    ];
+
+    /* ================= 2. LOGIKA RENDER & SEARCH ================= */
+    const cardsGrid = document.getElementById('cardsGrid');
+    const searchInput = document.getElementById('searchInput');
+    const emptyState = document.getElementById('emptyState');
+    const categoryContainer = document.getElementById('categoryContainer');
+    let activeCategory = 'all';
+
+    function getBadgeClass(cat) {
+      switch(cat.toLowerCase()) {
+        case 'html/css': return 'badge-htmlcss';
+        case 'javascript': return 'badge-javascript';
+        case 'python': return 'badge-python';
+        case 'sql': return 'badge-sql';
+        case 'git': return 'badge-git';
+        default: return 'badge-javascript';
+      }
+    }
+
+    function renderCards() {
+      const keyword = searchInput.value.toLowerCase().trim();
+      
+      const filtered = snippets.filter(item => {
+        const matchCategory = activeCategory === 'all' || item.cat === activeCategory;
+        const matchKeyword = item.title.toLowerCase().includes(keyword) || 
+                             item.desc.toLowerCase().includes(keyword) || 
+                             item.code.toLowerCase().includes(keyword) || 
+                             item.cat.toLowerCase().includes(keyword);
+        return matchCategory && matchKeyword;
+      });
+
+      cardsGrid.innerHTML = '';
+
+      if (filtered.length === 0) {
+        emptyState.style.display = 'block';
+        return;
+      } else {
+        emptyState.style.display = 'none';
+      }
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'snippet-card';
+        card.innerHTML = `
+          <div class="card-header">
+            <h2 class="card-title">${escapeHTML(item.title)}</h2>
+            <span class="card-badge ${getBadgeClass(item.cat)}">${item.cat}</span>
+          </div>
+          <p class="card-desc">${escapeHTML(item.desc)}</p>
+          <div class="code-container">
+            <pre class="code-content"><code>${escapeHTML(item.code)}</code></pre>
+            <button class="copy-btn" onclick="copySnippet(this, \`${escapeForAttr(item.code)}\`)">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span>Salin</span>
+            </button>
+          </div>
+          <div class="usage-example">
+            <span class="usage-label">Contoh:</span> ${escapeHTML(item.usage)}
+          </div>
+        `;
+        cardsGrid.appendChild(card);
+      });
+    }
+
+    function escapeHTML(str) {
+      return str.replace(/[&<>'"]/g, tag => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[tag] || tag));
+    }
+
+    function escapeForAttr(str) {
+      return encodeURIComponent(str);
+    }
+
+    /* ================= 3. SALIN KODE INSTAN ================= */
+    window.copySnippet = function(btn, encodedCode) {
+      const code = decodeURIComponent(encodedCode);
+      navigator.clipboard.writeText(code).then(() => {
+        const textSpan = btn.querySelector('span');
+        const originalText = textSpan.innerText;
+        btn.classList.add('copied');
+        textSpan.innerText = 'Tersalin!';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          textSpan.innerText = originalText;
+        }, 1600);
+      });
+    };
+
+    /* ================= 4. FILTER KATEGORI & EVENT ================= */
+    categoryContainer.addEventListener('click', (e) => {
+      if (e.target.classList.contains('chip')) {
+        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        e.target.classList.add('active');
+        activeCategory = e.target.dataset.cat;
+        renderCards();
+      }
+    });
+
+    searchInput.addEventListener('input', renderCards);
+
+    /* ================= 5. THEME SWITCHER (DARK & LIGHT) ================= */
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeIcon = document.getElementById('themeIcon');
+    const htmlEl = document.documentElement;
+
+    function applyTheme(theme) {
+      htmlEl.setAttribute('data-theme', theme);
+      localStorage.setItem('xtrade_theme', theme);
+      if (theme === 'light') {
+        themeIcon.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`;
+      } else {
+        themeIcon.innerHTML = `<circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>`;
+      }
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+      const current = htmlEl.getAttribute('data-theme') || 'dark';
+      applyTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    // Inisialisasi tema tersimpan
+    const savedTheme = localStorage.getItem('xtrade_theme') || 'dark';
+    applyTheme(savedTheme);
+
+    /* ================= 6. FLASHSCREEN XTRADE SMOOTH ================= */
+    window.addEventListener('DOMContentLoaded', () => {
+      renderCards();
+      setTimeout(() => {
+        const splash = document.getElementById('splashscreen');
+        if (splash) {
+          splash.classList.add('fade-out');
+          setTimeout(() => splash.remove(), 750);
+        }
+      }, 1800);
+    });
+
+    /* ================= 7. PWA SERVICE WORKER & OFFLINE DETECT ================= */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => {
+          console.warn('SW Register Error:', err);
+        });
+      });
+    }
+
+    const offlineBanner = document.getElementById('offlineBanner');
+    function updateOnlineStatus() {
+      offlineBanner.style.display = navigator.onLine ? 'none' : 'block';
+    }
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+  </script>
+</body>
+  </html>
